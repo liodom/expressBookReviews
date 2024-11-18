@@ -29,7 +29,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
   const { author } = req.params;
-  const authorBooks = Object.entries(books).filter(([k, v]) => v.author === author).map(([k, v]) => v);
+  const authorBooks = Object.entries(books).filter(([_, book]) => book.author === author).map(([_, book]) => book);
 
   return res.status(200).json(authorBooks);
 });
@@ -37,7 +37,10 @@ public_users.get('/author/:author',function (req, res) {
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const { title } = req.params;
+
+  const titleBooks = Object.entries(books).filter(([_, book]) => book.title === title).map(([_, book]) => book);
+  return res.status(200).json(titleBooks);
 });
 
 //  Get book review
