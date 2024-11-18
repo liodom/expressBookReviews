@@ -20,7 +20,7 @@ public_users.get('/',function (req, res) {
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
   const { isbn } = req.params;
-  const book = books.find(b => b[isbn] === isbn) ?? "No book found for this ISBN";
+  const book = books[isbn] ?? "No book found for this ISBN";
 
   return res.status(200).json(book);
  });
