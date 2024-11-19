@@ -28,31 +28,46 @@ public_users.post("/register", (req,res) => {
 public_users.get('/',function (_, res) {
   //Write your code here
   const randomNumber = Math.round(Math.random() * 10);
-
+  
   // create a Promise that can resolve or reject call
   const booksPromise = new Promise((resolve, reject) => setTimeout(() => {
-    if(randomNumber > 7){
-        reject("Books not found!");
-    }
-
-    resolve(books);
-  }, 2000))
-
-  // unpack promise to get data or error
-  booksPromise.then(data => {
-      return res.status(200).json(data);
+      if(randomNumber > 7){
+          reject("Books not found!");
+        }
+        
+        resolve(books);
+    }, 2000))
+    
+    // unpack promise to get data or error
+    booksPromise.then(data => {
+        return res.status(200).json(data);
     }).catch(error => {
-      return res.status(404).json(error);
-  })
+        return res.status(404).json(error);
+    })
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
-  const { isbn } = req.params;
-  const book = books[isbn] ?? "No book found for this ISBN";
-
-  return res.status(200).json(book);
+    //Write your code here
+    const { isbn } = req.params;
+        
+    // create a Promise that can resolve or reject
+    const booksPromise = new Promise((resolve, reject) => setTimeout(() => {
+        const book = books[isbn];
+        
+        if(!book){
+            reject("Book not found for this ISBN!");
+        }
+        
+        resolve(book);
+    }, 2000))
+    
+    // unpack promise to get data or error
+    booksPromise.then(data => {
+        return res.status(200).json(data);
+    }).catch(error => {
+        return res.status(404).json(error);
+    })
  });
   
 // Get book details based on author
