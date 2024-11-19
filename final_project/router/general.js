@@ -25,9 +25,25 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/',function (_, res) {
   //Write your code here
-  return res.status(300).json(books);
+  const randomNumber = Math.round(Math.random() * 10);
+
+  // create a Promise that can resolve or reject call
+  const booksPromise = new Promise((resolve, reject) => setTimeout(() => {
+    if(randomNumber > 7){
+        reject("Books not found!");
+    }
+
+    resolve(books);
+  }, 2000))
+
+  // unpack promise to get data or error
+  booksPromise.then(data => {
+      return res.status(200).json(data);
+    }).catch(error => {
+      return res.status(404).json(error);
+  })
 });
 
 // Get book details based on ISBN
