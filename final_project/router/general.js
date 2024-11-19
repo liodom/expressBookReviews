@@ -71,12 +71,16 @@ public_users.get('/isbn/:isbn',function (req, res) {
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_users.get('/author/:author', async function (req, res) {
   //Write your code here
   const { author } = req.params;
-  const authorBooks = Object.entries(books).filter(([_, book]) => book.author === author).map(([_, book]) => book);
+  
+  const booksPromise = new Promise((resolve) => {
+    const authorBooks = Object.entries(books).filter(([_, book]) => book.author === author).map(([_, book]) => book);
+    setTimeout(() => resolve(authorBooks), 3000);
+  })
 
-  return res.status(200).json(authorBooks);
+  return res.status(200).json(await booksPromise);
 });
 
 // Get all books based on title
