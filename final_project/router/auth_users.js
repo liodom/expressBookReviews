@@ -18,7 +18,6 @@ const authenticatedUser = (username, password) => { //returns boolean
 //only registered users can login
 regd_users.post("/login", (req,res) => {
   //Write your code here
-	console.log('LOGIN')
   const { username, password } = req.body;
 
   if(isValid(username) && authenticatedUser(username, password)){
@@ -34,7 +33,20 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+	const { isbn } = req.params;
+	const { review: userReview } = req.query;
+	const user = jwt.verify(req.session.user, "secret-key");
+
+	const reviewedBook = books[isbn]
+
+	if(!reviewedBook){
+		return res.status(404).json("No book found for this ISBN");
+	}
+
+	// Add review to book with isbn
+	reviewedBook.reviews[user] = userReview;
+
+  return res.status(200).json(reviewedBook);
 });
 
 module.exports.authenticated = regd_users;

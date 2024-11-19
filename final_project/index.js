@@ -12,7 +12,14 @@ app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUni
 
 app.use("/customer/auth/*", function auth(req,res,next){
 //Write the authenication mechanism here
+const userFromSession = req.session.user;
+const user = userFromSession ? jwt.verify(req.session.user, "secret-key") : null;
 
+if(!user){
+    return res.status(401).json("User must authenticate.")
+}
+
+next();
 });
  
 const PORT =5000;
