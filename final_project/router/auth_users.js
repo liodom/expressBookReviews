@@ -42,12 +42,29 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 	if(!reviewedBook){
 		return res.status(404).json("No book found for this ISBN");
 	}
-
+	
 	// Add review to book with isbn
 	reviewedBook.reviews[user] = userReview;
-
+	
   return res.status(200).json(reviewedBook);
 });
+
+// only registered users can delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+	const { isbn } = req.params;
+	const usernameFromSession = jwt.verify(req.session.user, "secret-key");
+	
+	const selectedBook = books[isbn];
+	
+	if(!selectedBook){
+		return res.status(404).json("No book found for this ISBN");
+	}
+	
+	// delete review from book
+	delete selectedBook.reviews[usernameFromSession];
+
+	return res.status(201).json(selectedBook);
+})
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
