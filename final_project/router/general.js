@@ -79,17 +79,21 @@ public_users.get('/author/:author', async function (req, res) {
     const authorBooks = Object.entries(books).filter(([_, book]) => book.author === author).map(([_, book]) => book);
     setTimeout(() => resolve(authorBooks), 3000);
   })
-
+	
   return res.status(200).json(await booksPromise);
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
+	//Write your code here
   const { title } = req.params;
-
-  const titleBooks = Object.entries(books).filter(([_, book]) => book.title === title).map(([_, book]) => book);
-  return res.status(200).json(titleBooks);
+	
+	const booksPromise = new Promise((resolve) => {
+		const titleBooks = Object.entries(books).filter(([_, book]) => book.title === title).map(([_, book]) => book);
+		setTimeout(() => resolve(titleBooks), 3000);
+	})
+	
+  booksPromise.then(books => res.status(200).json(books))
 });
 
 //  Get book review
