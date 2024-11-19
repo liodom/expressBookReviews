@@ -16,7 +16,7 @@ const userFromSession = req.session.user;
 const user = userFromSession ? jwt.verify(req.session.user, "secret-key") : null;
 
 if(!user){
-    return res.status(401).json("User must authenticate.")
+    return res.status(401).json("User is not authenticated.")
 }
 
 next();
